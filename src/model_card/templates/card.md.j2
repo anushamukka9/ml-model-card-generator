@@ -1,0 +1,60 @@
+# Model Card: {{ card.model_name }}
+
+**Version:** {{ card.version }}
+{% if card.model_type %}**Type:** {{ card.model_type }}{% endif %}
+{% if card.developers %}**Developers:** {{ card.developers }}{% endif %}
+
+## Intended Use
+
+**Primary uses:**
+{% for use in card.intended_use.primary_uses %}- {{ use }}
+{% endfor %}
+{% if card.intended_use.out_of_scope %}
+**Out of scope:**
+{% for item in card.intended_use.out_of_scope %}- {{ item }}
+{% endfor %}{% endif %}
+{% if card.intended_use.users %}**Intended users:** {{ card.intended_use.users }}{% endif %}
+
+## Training Data
+
+**Datasets:**
+{% for ds in card.training_data.datasets %}- {{ ds }}
+{% endfor %}
+{% if card.training_data.preprocessing %}**Preprocessing:** {{ card.training_data.preprocessing }}{% endif %}
+{% if card.training_data.splits %}
+**Splits:**
+| Split | Fraction |
+|-------|----------|
+{% for name, frac in card.training_data.splits.items() %}| {{ name }} | {{ frac }} |
+{% endfor %}{% endif %}
+
+## Evaluation
+
+{% if card.evaluation.evaluation_data %}**Evaluation data:** {{ card.evaluation.evaluation_data }}{% endif %}
+{% if card.evaluation.procedure %}**Procedure:** {{ card.evaluation.procedure }}{% endif %}
+
+**Metrics:**
+| Metric | Split | Value | Notes |
+|--------|-------|-------|-------|
+{% for m in card.evaluation.metrics %}| {{ m.name }} | {{ m.split }} | {{ m.value }} | {{ m.notes }} |
+{% endfor %}
+
+## Limitations
+
+{% if card.limitations.known_limitations %}**Known limitations:**
+{% for lim in card.limitations.known_limitations %}- {{ lim }}
+{% endfor %}{% endif %}
+{% if card.limitations.bias_risks %}**Bias risks:**
+{% for risk in card.limitations.bias_risks %}- {{ risk }}
+{% endfor %}{% endif %}
+
+## Ethical Considerations
+
+{% if card.ethical_considerations.sensitive_data %}**Sensitive data:** {{ card.ethical_considerations.sensitive_data }}{% endif %}
+**Human oversight:** {{ card.ethical_considerations.human_oversight }}
+{% if card.ethical_considerations.mitigation_steps %}**Mitigation steps:**
+{% for step in card.ethical_considerations.mitigation_steps %}- {{ step }}
+{% endfor %}{% endif %}
+
+---
+*Generated with [ml-model-card-generator](https://github.com/anushamukka9/ml-model-card-generator).*

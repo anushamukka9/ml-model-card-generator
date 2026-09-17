@@ -1,0 +1,50 @@
+model_name: sentiment-bert-v2
+version: "2.1.0"
+model_type: Fine-tuned transformer (BERT-base)
+developers: NLP Platform Team
+intended_use:
+  primary_uses:
+    - Customer feedback sentiment classification
+    - Support ticket triage
+  out_of_scope:
+    - Legal or medical decision-making
+    - Languages other than English
+  users: Customer support operations teams
+training_data:
+  datasets:
+    - internal-support-tickets-2024 (licensed, internal)
+    - sst-2 (public benchmark)
+  preprocessing: Lowercased, deduplicated, PII redacted via NER filter
+  splits:
+    train: 0.8
+    validation: 0.1
+    test: 0.1
+evaluation:
+  evaluation_data: Held-out test split + SST-2 dev
+  procedure: 5-fold cross-validation on internal data; single run on SST-2 dev
+  metrics:
+    - name: accuracy
+      value: 0.934
+      split: test
+      notes: Internal held-out set
+    - name: f1_macro
+      value: 0.921
+      split: test
+      notes: Internal held-out set
+    - name: accuracy
+      value: 0.912
+      split: sst-2-dev
+limitations:
+  known_limitations:
+    - Performance degrades on sarcasm and mixed-sentiment reviews
+    - English only; no multilingual support
+  bias_risks:
+    - Training data skews toward North American support interactions
+ethical_considerations:
+  sensitive_data: Customer ticket text; PII redacted before training
+  human_oversight: Low-confidence predictions (< 0.6) routed to human agents
+  mitigation_steps:
+    - Quarterly bias probe across demographic slices
+    - PII redaction audited on every data refresh
+extra:
+  registry_uri: models://nlp/sentiment-bert-v2
