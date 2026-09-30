@@ -3,6 +3,9 @@
 **Version:** {{ card.version }}
 {% if card.model_type %}**Type:** {{ card.model_type }}{% endif %}
 {% if card.developers %}**Developers:** {{ card.developers }}{% endif %}
+{% if card.license %}**License:** {{ card.license }}{% endif %}
+{% if card.contact %}**Contact:** {{ card.contact }}{% endif %}
+{% if card.citation %}**Citation:** {{ card.citation }}{% endif %}
 
 ## Intended Use
 
@@ -15,6 +18,15 @@
 {% endfor %}{% endif %}
 {% if card.intended_use.users %}**Intended users:** {{ card.intended_use.users }}{% endif %}
 
+{% if card.factors.relevant_factors or card.factors.evaluation_factors %}## Factors
+
+{% if card.factors.relevant_factors %}**Relevant factors:**
+{% for factor in card.factors.relevant_factors %}- {{ factor }}
+{% endfor %}{% endif %}
+{% if card.factors.evaluation_factors %}**Evaluation factors:**
+{% for factor in card.factors.evaluation_factors %}- {{ factor }}
+{% endfor %}{% endif %}
+{% endif %}
 ## Training Data
 
 **Datasets:**
@@ -39,6 +51,20 @@
 {% for m in card.evaluation.metrics %}| {{ m.name }} | {{ m.split }} | {{ m.value }} | {{ m.notes }} |
 {% endfor %}
 
+{% if card.quantitative_analyses.unitary_results or card.quantitative_analyses.intersectional_results %}## Quantitative Analyses
+
+{% if card.quantitative_analyses.unitary_results %}**Unitary results:**
+| Metric | Slice | Value | Notes |
+|--------|-------|-------|-------|
+{% for r in card.quantitative_analyses.unitary_results %}| {{ r.name }} | {{ r.slice }} | {{ r.value }} | {{ r.notes }} |
+{% endfor %}{% endif %}
+{% if card.quantitative_analyses.intersectional_results %}
+**Intersectional results:**
+| Metric | Slice | Value | Notes |
+|--------|-------|-------|-------|
+{% for r in card.quantitative_analyses.intersectional_results %}| {{ r.name }} | {{ r.slice }} | {{ r.value }} | {{ r.notes }} |
+{% endfor %}{% endif %}
+{% endif %}
 ## Limitations
 
 {% if card.limitations.known_limitations %}**Known limitations:**
@@ -56,5 +82,14 @@
 {% for step in card.ethical_considerations.mitigation_steps %}- {{ step }}
 {% endfor %}{% endif %}
 
+{% if card.caveats.caveats or card.caveats.recommendations %}## Caveats and Recommendations
+
+{% if card.caveats.caveats %}**Caveats:**
+{% for caveat in card.caveats.caveats %}- {{ caveat }}
+{% endfor %}{% endif %}
+{% if card.caveats.recommendations %}**Recommendations:**
+{% for rec in card.caveats.recommendations %}- {{ rec }}
+{% endfor %}{% endif %}
+{% endif %}
 ---
 *Generated with [ml-model-card-generator](https://github.com/anushamukka9/ml-model-card-generator).*
