@@ -1,7 +1,7 @@
 [project]
 name = "ml-model-card-generator"
 version = "0.1.0"
-description = "Generate standardized model cards from training metadata — Markdown + JSON output for governance"
+description = "Generate standardized model cards from training metadata: Markdown + JSON output for governance"
 readme = "README.md"
 requires-python = ">=3.9"
 license = { text = "MIT" }
