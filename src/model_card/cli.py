@@ -9,7 +9,7 @@ import click
 import yaml
 
 from .renderer import export_json, render_markdown
-from .schema import CardValidationError, ModelCard
+from .schema import CardValidationError, ModelCard, find_unknown_fields
 
 
 @click.group()
@@ -55,8 +55,11 @@ def validate(input_path: str) -> None:
     """Validate metadata without rendering; exit 1 on errors."""
     with open(input_path, encoding="utf-8") as fh:
         metadata = yaml.safe_load(fh)
+    metadata = metadata or {}
+    for key in find_unknown_fields(metadata):
+        click.echo(f"warning: unrecognized top-level field {key!r} (kept in extra)", err=True)
     try:
-        ModelCard.from_dict(metadata or {}).ensure_valid()
+        ModelCard.from_dict(metadata).ensure_valid()
     except CardValidationError as exc:
         click.echo(f"invalid: {exc}", err=True)
         sys.exit(1)
