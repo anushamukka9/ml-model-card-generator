@@ -2,6 +2,9 @@ model_name: sentiment-bert-v2
 version: "2.1.0"
 model_type: Fine-tuned transformer (BERT-base)
 developers: NLP Platform Team
+license: Internal use only
+contact: nlp-platform@example.com
+citation: Internal technical report TR-2026-041
 intended_use:
   primary_uses:
     - Customer feedback sentiment classification
@@ -10,6 +13,13 @@ intended_use:
     - Legal or medical decision-making
     - Languages other than English
   users: Customer support operations teams
+factors:
+  relevant_factors:
+    - Review language variety (native vs. non-native English)
+    - Review length (short vs. long)
+  evaluation_factors:
+    - Review language variety (native vs. non-native English)
+    - Review length (short vs. long)
 training_data:
   datasets:
     - internal-support-tickets-2024 (licensed, internal)
@@ -34,6 +44,21 @@ evaluation:
     - name: accuracy
       value: 0.912
       split: sst-2-dev
+quantitative_analyses:
+  unitary_results:
+    - name: accuracy
+      value: 0.941
+      slice: native English reviews
+      notes: Internal held-out set
+    - name: accuracy
+      value: 0.887
+      slice: non-native English reviews
+      notes: Internal held-out set; known degradation
+  intersectional_results:
+    - name: accuracy
+      value: 0.871
+      slice: non-native English + short reviews
+      notes: Weakest slice; routed to human review below 0.6 confidence
 limitations:
   known_limitations:
     - Performance degrades on sarcasm and mixed-sentiment reviews
@@ -46,5 +71,12 @@ ethical_considerations:
   mitigation_steps:
     - Quarterly bias probe across demographic slices
     - PII redaction audited on every data refresh
+caveats:
+  caveats:
+    - Metrics reflect the internal support-ticket distribution; performance on other text types is unmeasured
+    - The weakest slice (non-native English, short reviews) underperforms the headline accuracy by 6 points
+  recommendations:
+    - Route predictions below 0.6 confidence to human agents
+    - Re-evaluate on any data distribution change before redeploying
 extra:
   registry_uri: models://nlp/sentiment-bert-v2
